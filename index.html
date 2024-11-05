@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Magic Eight Ball</title>
+    <style>
+      body {
+        font-family: "Trebuchet MS", sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+      .container {
+        margin-top: 50px;
+      }
+      #black-ball {
+        width: 60vmin;
+        height: 60vmin;
+        background-color: #1e1e1e;
+        margin-top: 5%;
+        align-self: center;
+        border-radius: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        background: radial-gradient(circle at 30vmin 30vmin, #444, #000);
+      }
+
+      #white-ball {
+        position: absolute;
+        left: 15vmin;
+        right: 15vmin;
+        bottom: 15vmin;
+        top: 15vmin;
+        width: 30vmin;
+        height: 30vmin;
+        border-radius: 50%;
+        background: #fff;
+        font-size: 15vmin;
+        font-family: sans-serif;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        line-height: 30vmin;
+        transition: opacity 1s;
+        color: black;
+      }
+
+      .ans-screen {
+        position: absolute;
+        left: 15vmin;
+        right: 15vmin;
+        bottom: 15vmin;
+        top: 15vmin;
+        width: 30vmin;
+        height: 30vmin;
+        border-radius: 50%;
+        background: black;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        line-height: 30vmin;
+        transition: opacity 1s;
+        color: black;
+        opacity: 0; /* Start as invisible */
+        transition: opacity 2s ease-in; /* Fade in over 2 seconds */
+      }
+
+      .ans-screen.visible {
+        opacity: 1; /* Fade in over 2 seconds */
+      }
+
+      #eight {
+        color: #000;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+        bottom: 500px;
+      }
+
+      h1 {
+        overflow: hidden; /* Ensures the content is not revealed until the animation */
+        border-right: 0.15em solid orange; /* The typwriter cursor */
+        color: #bb86fc;
+        text-shadow: 0 0 10px rgba(187, 134, 252, 0.7);
+        display: inline-block;
+        white-space: nowrap; /* Keeps the content on a single line */
+        margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+        letter-spacing: 0.15em; /* Adjust as needed */
+        animation: typing 3s steps(20, end), blink-caret 0.75s step-end infinite;
+      }
+
+      /* The typing effect */
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+
+      /* The typewriter cursor effect */
+      @keyframes blink-caret {
+        from,
+        to {
+          border-color: transparent;
+        }
+        50% {
+          border-color: orange;
+        }
+      }
+      input,
+      select,
+      button {
+        padding: 10px;
+        margin: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: none;
+      }
+      input,
+      select {
+        background-color: #333;
+        color: #e0e0e0;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+      }
+      input::placeholder {
+        color: #bbb;
+      }
+      button {
+        background-color: #bb86fc;
+        color: #121212;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 15px rgba(187, 134, 252, 0.6);
+      }
+      button:hover {
+        background-color: #7f39fb;
+        box-shadow: 0 0 25px rgba(187, 134, 252, 0.9);
+      }
+      .response {
+        margin-top: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #03dac6;
+        text-shadow: 0 0 5px rgba(3, 218, 198, 0.7);
+      }
+      .container {
+        background-color: #1e1e1e;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        width: 400px;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Magic Eight Ball</h1>
+
+      <input
+        type="text"
+        id="quoteInput"
+        placeholder="Ask your question..."
+        size="40"
+      />
+
+      <select id="modeSelect">
+        <option value="normal">Normal</option>
+        <option value="work">Work</option>
+        <option value="chad">Chad</option>
+      </select>
+
+      <button onclick="handleEightBall()">Ask the Eight Ball</button>
+
+      <div class="response" id="response"></div>
+    </div>
+    <div id="black-ball">
+      <div id="white-ball">
+        <span id="eight">8</span>
+      </div>
+    </div>
+    <script>
+      function handleEightBall() {
+        const quote = document.getElementById("quoteInput").value;
+        const mode = document.getElementById("modeSelect").value;
+        eightBall(mode, quote);
+      }
+
+      function eightBall(mode, quote) {
+        if (quote[quote.length - 1] !== "?") {
+          document.getElementById("response").innerText =
+            "Are you asking or telling me?";
+        } else if (mode === "normal") {
+          const normalAns = ["Yes", "No", "Maybe", "Ask again Later"];
+          const randomIndex = Math.floor(Math.random() * normalAns.length);
+          document.getElementById("response").innerText =
+            normalAns[randomIndex];
+        } else if (mode === "work") {
+          const workAns = [
+            "Yes",
+            "No",
+            "Maybe",
+            "Ask again Later",
+            "I'm not sure, but I think you should ask your manager",
+            "I'm not sure, but I think you should ask your coworker",
+            "I'm not sure, but I think you should ask HR",
+            "I'm not sure, but I think you should ask IT",
+            "I'm not sure, but I think you should ask your supervisor",
+            "Go ask your boss for a raise",
+            "Go ask your boss for a promotion",
+            "Go ask your boss for a day off",
+            "Go ask your boss for a vacation",
+            "Go ask your boss for a sick day",
+            "Go ask your boss for a mental health day",
+            "Go ask your boss for a personal day",
+            "Go ask your boss for a work from home day",
+            "Go ask your boss for a remote day",
+            "Go ask your boss for a day in the office",
+            "Go ask your boss for a day in the field",
+            "Go ask your boss for a day in the warehouse",
+            "Go ask your boss for a day in the store",
+            "Go ask your boss for a day in the factory",
+            "Go ask your boss for a day in the lab",
+            "Go ask your boss for a day in the kitchen",
+            "Go ask your boss for a day in the break room",
+            "Go ask your boss for a day in the conference room",
+            "Go ask your boss for a day in the meeting room",
+            "Go ask your boss for a day in the board room",
+            "Go ask your boss for a day in the training room",
+            "Go ask your boss for a day in the classroom",
+            "Go ask your boss for a day in the office",
+            "Go ask out your boss on a date",
+          ];
+          const randomIndex = Math.floor(Math.random() * workAns.length);
+          document.getElementById("response").innerText = workAns[randomIndex];
+        } else if (mode === "chad") {
+          document.getElementById("response").innerText =
+            "You know what you need to do.";
+          setTimeout(() => {
+            window.close();
+          }, 5000);
+        }
+      }
+    </script>
+  </body>
+</html>
