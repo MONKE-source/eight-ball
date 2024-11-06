@@ -30,6 +30,16 @@
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         background: radial-gradient(circle at 30vmin 30vmin, #444, #000);
       }
+      #eight-button {
+        background: none;
+        color: inherit;
+        border: none;
+        padding: 0;
+        font: inherit;
+        outline: inherit;
+        position: fixed;
+        top: 60%;
+      }
 
       #white-ball {
         position: absolute;
@@ -143,12 +153,17 @@
         box-shadow: 0 0 25px rgba(187, 134, 252, 0.9);
       }
       .response {
-        margin-top: 20px;
-        font-size: 20px;
-        font-weight: bold;
-        color: #03dac6;
+        font-size: 1.5vmin;
+        color: white;
         text-shadow: 0 0 5px rgba(3, 218, 198, 0.7);
+        white-space: normal;
+        overflow-wrap: break-word;
+        max-width: 95%;
+        max-height: 95%;
+        text-overflow: ellipsis;
+        line-height: 1.2;
       }
+
       .container {
         background-color: #1e1e1e;
         padding: 30px;
@@ -156,6 +171,66 @@
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         width: 400px;
         margin: auto;
+      }
+      @keyframes shake {
+        0% {
+          transform: translate(0, 0);
+        }
+        10% {
+          transform: translate(-20px, -10px);
+        }
+        20% {
+          transform: translate(20px, 10px);
+        }
+        30% {
+          transform: translate(-20px, -10px);
+        }
+        40% {
+          transform: translate(20px, 10px);
+        }
+        50% {
+          transform: translate(-20px, -10px);
+        }
+        60% {
+          transform: translate(20px, 10px);
+        }
+        70% {
+          transform: translate(-20px, -10px);
+        }
+        80% {
+          transform: translate(20px, 10px);
+        }
+        90% {
+          transform: translate(-20px, -10px);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+
+      .shake {
+        animation: shake 0.5s;
+        position: relative;
+      }
+
+      .blue-rectangle {
+        width: auto; /* Allow auto width */
+        height: auto; /* Allow auto height */
+        min-width: 18vmin; /* Minimum size for the rectangle */
+        min-height: 18vmin;
+        max-width: 20vmin;
+        max-height: 20vmin;
+        background-color: #1c23e8;
+        position: absolute;
+        opacity: 0.8;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 5px;
       }
     </style>
   </head>
@@ -175,16 +250,19 @@
         <option value="work">Work</option>
         <option value="chad">Chad</option>
       </select>
-
-      <button onclick="handleEightBall()">Ask the Eight Ball</button>
-
-      <div class="response" id="response"></div>
     </div>
-    <div id="black-ball">
-      <div id="white-ball">
-        <span id="eight">8</span>
+    <button id="eight-button">
+      <div id="black-ball">
+        <div id="white-ball">
+          <span id="eight">8</span>
+        </div>
+        <div class="ans-screen" id="ans">
+          <div class="blue-rectangle">
+            <p class="response" id="response"></p>
+          </div>
+        </div>
       </div>
-    </div>
+    </button>
     <script>
       function handleEightBall() {
         const quote = document.getElementById("quoteInput").value;
@@ -192,14 +270,23 @@
         eightBall(mode, quote);
       }
 
+      function addLineBreaks(text, maxLength) {
+        let result = "";
+        while (text.length > maxLength) {
+          result += text.substring(0, maxLength) + "<br>";
+          text = text.substring(maxLength);
+        }
+        return result + text;
+      }
+
       function eightBall(mode, quote) {
         if (quote[quote.length - 1] !== "?") {
-          document.getElementById("response").innerText =
+          document.getElementById("response").innerHTML =
             "Are you asking or telling me?";
         } else if (mode === "normal") {
           const normalAns = ["Yes", "No", "Maybe", "Ask again Later"];
           const randomIndex = Math.floor(Math.random() * normalAns.length);
-          document.getElementById("response").innerText =
+          document.getElementById("response").innerHTML =
             normalAns[randomIndex];
         } else if (mode === "work") {
           const workAns = [
@@ -238,15 +325,30 @@
             "Go ask out your boss on a date",
           ];
           const randomIndex = Math.floor(Math.random() * workAns.length);
-          document.getElementById("response").innerText = workAns[randomIndex];
+          document.getElementById("response").innerHTML = workAns[randomIndex];
         } else if (mode === "chad") {
-          document.getElementById("response").innerText =
+          document.getElementById("response").innerHTML =
             "You know what you need to do.";
           setTimeout(() => {
             window.close();
           }, 5000);
         }
       }
+
+      //Eight-ball control
+      document
+        .getElementById("eight-button")
+        .addEventListener("click", function () {
+          const button = this;
+          button.classList.add("shake");
+          document.getElementById("ans").classList.add("visible");
+          handleEightBall();
+
+          // Remove the shake class after the animation is done
+          setTimeout(() => {
+            button.classList.remove("shake");
+          }, 500); // Duration of the shake animation
+        });
     </script>
   </body>
 </html>
